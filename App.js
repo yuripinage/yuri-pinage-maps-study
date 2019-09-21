@@ -1,49 +1,44 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { useState, useEffect } from 'react'
+import { StatusBar, Text } from 'react-native'
+import AppNavigator from './src/navigation/app.navigation'
+import AsyncStorage from '@react-native-community/async-storage'
+import { storagePrefix } from './src/helpers'
 
-import MapView from 'react-native-maps'
+const App = props => {
+    const [initialRoute, setInitialRoute] = useState('')
+    const [loading, setLoading] = useState(true)
 
-import React, { Fragment } from 'react'
-import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar } from 'react-native'
+    useEffect(() => {
+        verifyAuthUser()
+    }, [])
 
-const App = () => {
+    useEffect(() => {
+        if (!initialRoute) return
+        setLoading(false)
+    }, [initialRoute])
+
+    const verifyAuthUser = async () => {
+        try {
+            // const checkedPermission = await AsyncStorage.getItem(`${storagePrefix}checked_permission`)
+
+            // if (!checkedPermission) {
+            //     setInitialRoute('Location')
+            //     return
+            // }
+
+            setInitialRoute('Map')
+        } catch (err) {
+            console.log('err', err)
+            setLoading(false)
+        }
+    }
+
     return (
-        <View style={styles.container}>
-            <MapView
-                style={styles.map}
-                region={{
-                    latitude: 37,
-                    longitude: -122,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.0121
-                }}
-            ></MapView>
-        </View>
+        <>
+            <StatusBar backgroundColor="black" />
+            {!loading && <AppNavigator initialRouteName={initialRoute} />}
+        </>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        ...StyleSheet.absoluteFillObject,
-        height: 400,
-        width: 400,
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
-    map: {
-        position: 'absolute',
-        width: 200,
-        height: 200,
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0
-    }
-})
 
 export default App
