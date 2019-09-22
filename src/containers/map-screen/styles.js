@@ -1,20 +1,24 @@
 import styled from 'styled-components/native'
 import MapView from 'react-native-maps'
-import { gray, light } from '../../theme'
+import { light } from '../../theme'
 
 export const Container = styled.View`
-    flex: 1;
     background-color: ${light};
+    flex: 1;
     align-items: center;
 `
 
 export const Map = styled(MapView)`
-    height: 40%;
+    height: 50%;
     width: 100%;
     margin-bottom: 20px;
 `
 
-export const FormContainer = styled.View`
+export const Scroll = styled.ScrollView`
     width: 100%;
+`
+
+export const FormContainer = styled.View`
     align-items: center;
+    width: 100%;
 `
