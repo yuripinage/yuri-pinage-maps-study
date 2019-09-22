@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { ActivityIndicator } from 'react-native'
 import Permissions from 'react-native-permissions'
-import { secondary } from '../../theme'
+import { Marker } from 'react-native-maps'
+import { primary, secondary } from '../../theme'
+import { getGeolocation } from '../../helpers'
 import { Container, FormContainer, Map, Scroll } from './styles'
 import CustomInput from '../../components/custom-input'
 import CustomModal from '../../components/custom-modal'
@@ -13,8 +15,8 @@ export default MapScreen = props => {
     const [loading, setLoading] = useState(false)
     const [gpsModal, setGpsModal] = useState(false)
     const [hasPermission, setHasPermission] = useState(false)
-    const [lat, setLat] = useState('')
-    const [long, setLong] = useState('')
+    const [lat, setLat] = useState('-21.8048843')
+    const [long, setLong] = useState('-48.1758432')
     const [errors, setErrors] = useState({})
     const [position, setPosition] = useState({ lat: -21.8048843, long: -48.1758432 })
 
@@ -25,6 +27,7 @@ export default MapScreen = props => {
     const handlePermission = async () => {
         const status = await Permissions.check('location')
         setHasPermission(status === 'authorized')
+        setMyLocation(status === 'authorized')
     }
 
     const handleMyLocation = async value => {
@@ -40,9 +43,20 @@ export default MapScreen = props => {
             }
 
             setMyLocation(true)
+            const { latitude, longitude } = await getGeolocation()
+            setPosition({ lat: latitude, long: longitude })
         } catch (err) {
             console.log('err', err)
         }
+    }
+
+    const handleMapPress = value => {
+        console.log('value', value)
+    }
+
+    const handleSubmit = () => {
+        if (!isFormValid()) return
+        setPosition({ lat, long })
     }
 
     const isFormValid = () => {
@@ -50,18 +64,17 @@ export default MapScreen = props => {
 
         if (!lat) err.lat = 'Campo obrigatório'
         else if (!Number(lat) && lat !== '0' && lat !== '-0') err.lat = 'Número inválido'
+        else if (Number(lat) < -85) err.lat = 'Valor mínimo é -85'
+        else if (Number(lat) > 85) err.lat = 'Valor máximo é 85'
 
         if (!long) err.long = 'Campo obrigatório'
         else if (!Number(long) && long !== '0' && long !== '-0') err.long = 'Número inválido'
+        else if (Number(lat) < -180) err.lat = 'Valor mínimo é -180'
+        else if (Number(lat) > 180) err.lat = 'Valor máximo é 180'
 
         setErrors(err)
 
         return JSON.stringify(err) === '{}'
-    }
-
-    const handleSubmit = () => {
-        if (!isFormValid()) return
-        setPosition({ lat, long })
     }
 
     return (
@@ -84,7 +97,13 @@ export default MapScreen = props => {
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01
                 }}
-            ></Map>
+                onPress={e => handleMapPress(e.nativeEvent)}
+            >
+                <Marker
+                    pinColor={primary}
+                    coordinate={{ latitude: Number(position.lat), longitude: Number(position.long) }}
+                />
+            </Map>
             <Scroll>
                 <FormContainer>
                     <Switch
