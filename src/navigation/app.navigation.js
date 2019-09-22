@@ -1,7 +1,8 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import React from 'react'
-import MapScreen from '../containers/map-screen/map-screen'
+import MapScreen from '../containers/map-screen'
+import LocationScreen from '../containers/location-screen'
 
 const MapStack = createStackNavigator(
     {
@@ -13,11 +14,22 @@ const MapStack = createStackNavigator(
     }
 )
 
+const LocationStack = createStackNavigator(
+    {
+        LocationScreen: LocationScreen
+    },
+    {
+        initialRouteName: 'LocationScreen',
+        defaultNavigationOptions: props => defaultOptions(props)
+    }
+)
+
 const AppNavigator = ({ initialRouteName }) => {
     const App = createAppContainer(
         createSwitchNavigator(
             {
-                Map: MapStack
+                Map: MapStack,
+                Location: LocationScreen
             },
             {
                 initialRouteName: initialRouteName

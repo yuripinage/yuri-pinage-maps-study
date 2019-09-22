@@ -19,12 +19,12 @@ const App = props => {
 
     const verifyAuthUser = async () => {
         try {
-            // const checkedPermission = await AsyncStorage.getItem(`${storagePrefix}checked_permission`)
+            const checkedPermission = await AsyncStorage.getItem(`${storagePrefix}checked_permission`)
 
-            // if (!checkedPermission) {
-            //     setInitialRoute('Location')
-            //     return
-            // }
+            if (!checkedPermission) {
+                setInitialRoute('Location')
+                return
+            }
 
             setInitialRoute('Map')
         } catch (err) {
