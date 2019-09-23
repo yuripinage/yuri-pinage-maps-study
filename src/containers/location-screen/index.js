@@ -6,9 +6,10 @@ import { Container, Description, ButtonsContainer, Gif } from './styles'
 import Button from '../../components/button'
 import { storagePrefix } from '../../helpers'
 
-export default LocationScreen = props => {
-    const [loading, setLoading] = useState(false)
+//  Nessa tela o usuário será perguntado se deseja liberar o acesso ao GPS.
+//  Após responder é adicionado na memória do aparelho que a checagem foi feita.
 
+export default LocationScreen = props => {
     requestLocationPermission = async value => {
         if (value) await Permissions.request('location', { type: 'always' })
 
@@ -16,8 +17,6 @@ export default LocationScreen = props => {
 
         props.navigation.navigate('Map')
     }
-
-    if (loading) return <View style={{ flex: 1 }} />
 
     return (
         <Container>

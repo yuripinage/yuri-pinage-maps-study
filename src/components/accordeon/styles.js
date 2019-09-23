@@ -39,7 +39,8 @@ export const Icon = styled(MaterialCommunityIcons)`
     color: ${gray};
 `
 
-export const ItemContainer = styled.View`
+export const ItemInfoContainer = styled.View`
+    max-width: 80%;
     flex-direction: row;
     align-items: center;
 `

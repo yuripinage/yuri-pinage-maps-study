@@ -1,3 +1,5 @@
+//  Arquivo com algumas funções e variáveis úteis para usar em partes diferentes do app
+
 import Geolocation from '@react-native-community/geolocation'
 
 export const storagePrefix = '@yuripinageinvillia:'
@@ -14,8 +16,8 @@ export const getGeolocation = () => {
     })
 }
 
-// export const getRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`
-
+//  Inicialente seria gerada uma cor aletória, mas o Google Maps não aceita algumas cores, então elas tiveram quer inseridas manualmente
+//  export const getRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`
 export const colors = [
     '#8bf19e',
     '#8fd1cd',

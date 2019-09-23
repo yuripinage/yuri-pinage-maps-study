@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { TouchableWithoutFeedback, Animated } from 'react-native'
-import { Container, Item, Label, Point, Icon } from './styles'
+import { Container, ItemInfoContainer, Item, Label, Point, Icon } from './styles'
+
+//  Accordeon feito com animação do próprio React Native
 
 export default Accordeon = props => {
     const maxHeight = props.data.length * 60
@@ -12,12 +14,12 @@ export default Accordeon = props => {
         if (!collapsed) {
             Animated.timing(heightAnimation, {
                 toValue: maxHeight,
-                timing: 200
+                timing: 500
             }).start()
         } else {
             Animated.timing(heightAnimation, {
                 toValue: 0,
-                timing: 100
+                timing: 500
             }).start()
         }
     }, [collapsed])
@@ -27,15 +29,17 @@ export default Accordeon = props => {
             <TouchableWithoutFeedback onPress={() => setCollapsed(!collapsed)}>
                 <Item header>
                     <Label header>{props.title}</Label>
-                    <Icon name="chevron-down" />
+                    <Icon name={collapsed ? 'chevron-down' : 'chevron-up'} />
                 </Item>
             </TouchableWithoutFeedback>
             <Animated.View style={{ height: heightAnimation }}>
                 {props.data.map((item, index) => (
                     <TouchableWithoutFeedback onPress={() => props.onItemPress(item)} key={index}>
                         <Item>
-                            <Point color={item.color} />
-                            <Label>{item.name}</Label>
+                            <ItemInfoContainer>
+                                <Point color={item.color} />
+                                <Label>{item.name}</Label>
+                            </ItemInfoContainer>
                             <Icon name="eye-outline" />
                         </Item>
                     </TouchableWithoutFeedback>

@@ -30,19 +30,26 @@ export default MapScreen = props => {
         handlePermission()
     }, [])
 
+    //  Ao clicar em um lugar pelo mapa ou pela listagem um modal com as informações dele é exibido
     useEffect(() => {
         if (currentPlace) setPlaceModal(true)
     }, [currentPlace])
 
+    //  Checagem de acesso ao GPS
     const handlePermission = async () => {
         const status = await Permissions.check('location')
         setHasPermission(status === 'authorized')
     }
 
+    //  Caso o app tenha acesso ao GPS é carregada uma lista de lugares próximos em ordem alfabética e recebem uma cor própria para ajudar na visualização
+    //  Caso ele tente usar a posição do usuário, mas não tenha acesso ao GPS, aparecerá um modal com instruções
+    //  Esse fluxo só funcionará em Android, pois o iOS permite que o app peça permissões apenas uma vez
+    //  O fluxo no iOS será consertado em breve
     const handleMyLocation = async value => {
         try {
             if (!value) {
                 setMyLocation(value)
+                setPlaces([])
                 return
             }
 
@@ -50,6 +57,8 @@ export default MapScreen = props => {
                 setGpsModal(true)
                 return
             }
+
+            setLoading(true)
             setMyLocation(true)
 
             const { latitude, longitude } = await getGeolocation()
@@ -58,12 +67,14 @@ export default MapScreen = props => {
             const results = await RNGooglePlaces.getCurrentPlace(['placeID', 'location', 'name', 'address'])
             let colorsArray = colors
             setPlaces(
-                results.map(item => {
-                    const index = Math.floor(Math.random() * colorsArray.length)
-                    item.color = colorsArray[index]
-                    colorsArray = colorsArray.filter(e => e !== colorsArray[index])
-                    return item
-                })
+                results
+                    .map(item => {
+                        const index = Math.floor(Math.random() * colorsArray.length)
+                        item.color = colorsArray[index]
+                        colorsArray = colorsArray.filter(e => e !== colorsArray[index])
+                        return item
+                    })
+                    .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
             )
 
             setLoading(false)
@@ -73,11 +84,14 @@ export default MapScreen = props => {
         }
     }
 
+    //  Envio do formulário
     const handleSubmit = () => {
         if (!isFormValid()) return
         setPosition({ lat, long })
     }
 
+    //  Checa se as informações de latitude e longitude do formulário são válidas
+    //  Apesar de latitude poder ser até 90, o maps só aceita até 85 para exibir o marcador
     const isFormValid = () => {
         let err = {}
 

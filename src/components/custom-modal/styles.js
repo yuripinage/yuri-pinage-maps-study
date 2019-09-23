@@ -11,6 +11,7 @@ export const Container = styled.View`
 
 export const ContentContainer = styled.View`
     min-width: 50%;
+    max-width: 90%;
     min-height: 25%;
     padding: 20px;
     background-color: ${light};
