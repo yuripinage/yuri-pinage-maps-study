@@ -4,7 +4,6 @@ import { dark, gray } from '../../theme'
 export const Container = styled.View`
     width: 100%;
     height: 60px;
-    justify-content: flex-start;
     border-bottom-width: 1;
     border-color: ${props => (props.errorMsg ? 'red' : gray)};
     margin-bottom: 20;

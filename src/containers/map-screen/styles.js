@@ -11,7 +11,6 @@ export const Container = styled.View`
 export const Map = styled(MapView)`
     height: 50%;
     width: 100%;
-    margin-bottom: 20px;
 `
 
 export const Scroll = styled.ScrollView`
@@ -20,5 +19,8 @@ export const Scroll = styled.ScrollView`
 
 export const FormContainer = styled.View`
     align-items: center;
+    width: 100%;
+`
+export const PlaceModalContainer = styled.View`
     width: 100%;
 `

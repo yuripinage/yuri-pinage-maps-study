@@ -9,11 +9,18 @@ export default CustomModal = props => {
             <Container>
                 <ContentContainer>
                     {props.children || <Description>{props.description}</Description>}
-                    {props.leftText && props.rightText && (
+                    {props.singleText ? (
                         <ButtonsContainer>
-                            <Button onPress={props.onLeftPress} text={props.leftText} />
-                            <Button onPress={props.onRightPress} text={props.rightText} outline />
+                            <Button onPress={props.onSinglePress} text={props.singleText} />
                         </ButtonsContainer>
+                    ) : (
+                        props.leftText &&
+                        props.rightText && (
+                            <ButtonsContainer>
+                                <Button onPress={props.onLeftPress} text={props.leftText} />
+                                <Button onPress={props.onRightPress} text={props.rightText} outline />
+                            </ButtonsContainer>
+                        )
                     )}
                 </ContentContainer>
             </Container>

@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { ActivityIndicator } from 'react-native'
 import Permissions from 'react-native-permissions'
+import RNGooglePlaces from 'react-native-google-places'
 import { Marker } from 'react-native-maps'
 import { primary, secondary } from '../../theme'
-import { getGeolocation } from '../../helpers'
-import { Container, FormContainer, Map, Scroll } from './styles'
+import { getGeolocation, colors } from '../../helpers'
+import { Container, FormContainer, Map, Scroll, PlaceModalContainer } from './styles'
 import CustomInput from '../../components/custom-input'
 import CustomModal from '../../components/custom-modal'
 import Button from '../../components/button'
-import Switch from '../../components/switch'
+import CustomSwitch from '../../components/custom-switch'
+import Accordeon from '../../components/accordeon'
+import PlaceItem from '../../components/place-item'
 
 export default MapScreen = props => {
     const [myLocation, setMyLocation] = useState(false)
+    const [places, setPlaces] = useState([])
+    const [currentPlace, setCurrentPlace] = useState(null)
     const [loading, setLoading] = useState(false)
     const [gpsModal, setGpsModal] = useState(false)
+    const [placeModal, setPlaceModal] = useState(false)
     const [hasPermission, setHasPermission] = useState(false)
     const [lat, setLat] = useState('-21.8048843')
     const [long, setLong] = useState('-48.1758432')
@@ -24,10 +30,13 @@ export default MapScreen = props => {
         handlePermission()
     }, [])
 
+    useEffect(() => {
+        if (currentPlace) setPlaceModal(true)
+    }, [currentPlace])
+
     const handlePermission = async () => {
         const status = await Permissions.check('location')
         setHasPermission(status === 'authorized')
-        setMyLocation(status === 'authorized')
     }
 
     const handleMyLocation = async value => {
@@ -41,17 +50,27 @@ export default MapScreen = props => {
                 setGpsModal(true)
                 return
             }
-
             setMyLocation(true)
+
             const { latitude, longitude } = await getGeolocation()
             setPosition({ lat: latitude, long: longitude })
+
+            const results = await RNGooglePlaces.getCurrentPlace(['placeID', 'location', 'name', 'address'])
+            let colorsArray = colors
+            setPlaces(
+                results.map(item => {
+                    const index = Math.floor(Math.random() * colorsArray.length)
+                    item.color = colorsArray[index]
+                    colorsArray = colorsArray.filter(e => e !== colorsArray[index])
+                    return item
+                })
+            )
+
+            setLoading(false)
         } catch (err) {
             console.log('err', err)
+            setLoading(false)
         }
-    }
-
-    const handleMapPress = value => {
-        console.log('value', value)
     }
 
     const handleSubmit = () => {
@@ -79,6 +98,10 @@ export default MapScreen = props => {
 
     return (
         <Container>
+            <CustomModal visible={loading}>
+                <ActivityIndicator size={40} color={secondary} />
+            </CustomModal>
+
             <CustomModal
                 visible={gpsModal}
                 leftText="Sim"
@@ -87,9 +110,14 @@ export default MapScreen = props => {
                 onRightPress={() => setGpsModal(false)}
                 description="Você ainda não habilitou o acesso ao GPS. Deseja fazer isso agora?"
             />
-            <CustomModal visible={loading}>
-                <ActivityIndicator size={40} color={secondary} />
+
+            <CustomModal visible={placeModal} singleText="Fechar" onSinglePress={() => setPlaceModal(false)}>
+                <PlaceModalContainer>
+                    <PlaceItem label="Nome" description={currentPlace && currentPlace.name} />
+                    <PlaceItem label="Endereço" description={currentPlace && currentPlace.address} />
+                </PlaceModalContainer>
             </CustomModal>
+
             <Map
                 region={{
                     latitude: Number(position.lat),
@@ -97,20 +125,32 @@ export default MapScreen = props => {
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01
                 }}
-                onPress={e => handleMapPress(e.nativeEvent)}
             >
                 <Marker
                     pinColor={primary}
                     coordinate={{ latitude: Number(position.lat), longitude: Number(position.long) }}
                 />
+                {places.map((item, index) => (
+                    <Marker
+                        key={index}
+                        onPress={e => setCurrentPlace(item)}
+                        pinColor={item.color}
+                        opacity={0.4}
+                        coordinate={{ latitude: item.location.latitude, longitude: item.location.longitude }}
+                    />
+                ))}
             </Map>
+
             <Scroll>
                 <FormContainer>
-                    <Switch
+                    <CustomSwitch
                         text="Usar localização atual"
                         value={myLocation}
                         onValueChange={() => handleMyLocation(!myLocation)}
                     />
+                    {places.length > 0 && (
+                        <Accordeon title="Lugares Próximos" data={places} onItemPress={setCurrentPlace} />
+                    )}
                     {!myLocation && (
                         <FormContainer>
                             <CustomInput

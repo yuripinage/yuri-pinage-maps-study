@@ -3,7 +3,7 @@ import { Switch } from 'react-native'
 import { Container, Label } from './styles'
 import { primary } from '../../theme'
 
-export default FilterScreen = props => {
+export default CustomSwitch = props => {
     return (
         <Container>
             <Label>{props.text}</Label>

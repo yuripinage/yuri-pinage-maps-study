@@ -13,6 +13,7 @@
     "react": "16.8.6",
     "react-native": "0.60.5",
     "react-native-gesture-handler": "^1.4.1",
+    "react-native-google-places": "^3.1.2",
     "react-native-maps": "^0.25.0",
     "react-native-permissions": "^1.2.1",
     "react-native-reanimated": "^1.2.0",
