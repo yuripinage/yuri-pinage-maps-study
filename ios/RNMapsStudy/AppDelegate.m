@@ -10,11 +10,17 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <GoogleMaps/GoogleMaps.h>
+@import GooglePlaces;
+@import GoogleMaps;
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyDO1_3Va3uwzfq2sKCD96knJGyOyRrOW3U"];
+  [GMSPlacesClient provideAPIKey:@"AIzaSyDO1_3Va3uwzfq2sKCD96knJGyOyRrOW3U"];
+  [GMSServices provideAPIKey:@"AIzaSyDO1_3Va3uwzfq2sKCD96knJGyOyRrOW3U"];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"RNMapsStudy"

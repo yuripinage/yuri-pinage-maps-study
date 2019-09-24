@@ -1,10 +1,10 @@
 import styled from 'styled-components/native'
 import { gray } from '../../theme'
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons'
+MaterialCommunityIcons.loadFont()
 
 export const Container = styled.View`
     width: 100%;
-    height: auto;
     margin-top: -20;
     margin-bottom: 20;
 `

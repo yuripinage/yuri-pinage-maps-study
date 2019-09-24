@@ -1,4 +1,5 @@
 import styled from 'styled-components/native'
+import { Platform } from 'react-native'
 import { dark, gray } from '../../theme'
 
 export const Container = styled.View`
@@ -13,6 +14,7 @@ export const Container = styled.View`
 export const LabelContainer = styled.View`
     flex-direction: row;
     margin-top: ${props => (props.focused ? 0 : 10)};
+    margin-bottom: ${props => (props.focused && Platform.OS === 'ios' ? 10 : 0)};
 `
 
 export const Label = styled.Text`

@@ -10,7 +10,7 @@ import CustomInput from '../../components/custom-input'
 import CustomModal from '../../components/custom-modal'
 import Button from '../../components/button'
 import CustomSwitch from '../../components/custom-switch'
-import Accordeon from '../../components/accordeon'
+import Accordion from '../../components/accordion'
 import PlaceItem from '../../components/place-item'
 
 export default MapScreen = props => {
@@ -163,7 +163,7 @@ export default MapScreen = props => {
                         onValueChange={() => handleMyLocation(!myLocation)}
                     />
                     {places.length > 0 && (
-                        <Accordeon title="Lugares Próximos" data={places} onItemPress={setCurrentPlace} />
+                        <Accordion title="Lugares Próximos" data={places} onItemPress={setCurrentPlace} />
                     )}
                     {!myLocation && (
                         <FormContainer>

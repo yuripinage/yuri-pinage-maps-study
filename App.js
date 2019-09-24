@@ -14,8 +14,6 @@
 //  Quando o mapa é atualizado para o local do GPS, é carregada uma lista do Google Places de 20 locais mais próximos.
 //  Esses locais são exibidos tanto no mapa quanto em uma listagem em ordem alfabética.
 //
-//  OBS: O app atualmente só está preparado para ANDROID. A versão iOS será configurada logo.
-//
 
 import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'react-native'
